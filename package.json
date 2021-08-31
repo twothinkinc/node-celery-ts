@@ -56,7 +56,6 @@
         "tslint-clean-code": "^0.2.7",
         "tslint-eslint-rules": "^5.4.0",
         "tslint-sonarts": "^1.7.0",
-        "typedoc": "TypeStrong/typedoc#master",
         "typescript": "^3.0.1"
     },
     "engines": {
@@ -66,9 +65,10 @@
         "amqplib": "^0.5.2",
         "ioredis": "^4.0.0",
         "js-yaml": "^3.13.1",
+        "typedoc": "^0.21.9",
         "underscore": "^1.13.1",
         "urijs": "^1.19.7",
-        "uuid": "^3.3.2"
+        "uuid": "^8.3.2"
     },
     "scripts": {
         "prepare": "./node_modules/typescript/bin/tsc",
