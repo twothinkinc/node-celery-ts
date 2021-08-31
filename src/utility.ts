@@ -32,6 +32,7 @@
 import { ParseError } from "./errors";
 
 import * as Events from "events";
+import { ResultMessage } from ".";
 
 /**
  * Follows the same rules as C/C++ integral literal parsing, stripping away
@@ -169,7 +170,7 @@ export const filterMapEvent = async <T>({ emitter, filterMap, name }: {
  * @see createTimerPromise
  */
 export const createTimeoutPromise = async <T>(
-    promise: T | PromiseLike<T>,
+    promise: PromiseLike<T> | ResultMessage<T> | any,
     timeout?: number
 ): Promise<T> => {
     if (isNullOrUndefined(timeout)) {
