@@ -7,3 +7,5 @@ celery-ts-*.tgz
 /coverage/
 *.log
 .vagrant/
+package-lock.json
+
