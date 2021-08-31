@@ -32,13 +32,12 @@
 import * as Errors from "../src/errors";
 import * as Uri from "../src/uri";
 
-import * as Chai from "chai";
-import * as Mocha from "mocha";
+import { expect } from "chai";
 
 /* tslint:disable:no-hardcoded-credentials */
 
-Mocha.describe("Celery.Uri.getScheme", () => {
-    Mocha.it("should parse typical schema", () => {
+describe("Celery.Uri.getScheme", () => {
+    it("should parse typical schema", () => {
         expectParseToEqual("amqp://h", Uri.Scheme.Amqp);
         expectParseToEqual("amqps://h", Uri.Scheme.AmqpSecure);
         expectParseToEqual("redis://h", Uri.Scheme.Redis);
@@ -61,7 +60,7 @@ Mocha.describe("Celery.Uri.getScheme", () => {
                            Uri.Scheme.RedisSentinelSecure);
     });
 
-    Mocha.it("should ignore the case of the schema to parse", () => {
+    it("should ignore the case of the schema to parse", () => {
         expectParseToEqual("AmQp://h", Uri.Scheme.Amqp);
         expectParseToEqual("AMQPS://h", Uri.Scheme.AmqpSecure);
         expectParseToEqual("REDis://h", Uri.Scheme.Redis);
@@ -72,7 +71,7 @@ Mocha.describe("Celery.Uri.getScheme", () => {
         expectParseToEqual("sEnTiNeLs://h", Uri.Scheme.RedisSentinelSecure);
     });
 
-    Mocha.it("should throw if it detects an invalid scheme", () => {
+    it("should throw if it detects an invalid scheme", () => {
         expectParseToThrow("http://h", Errors.ParseError);
         expectParseToThrow("ftp://h", Errors.ParseError);
         expectParseToThrow("imap://h", Errors.ParseError);
@@ -81,16 +80,16 @@ Mocha.describe("Celery.Uri.getScheme", () => {
     });
 
     const expectParseToEqual = (uri: string, expected: Uri.Scheme) => {
-        Chai.expect(Uri.getScheme(uri)).to.deep.equal(expected);
+        expect(Uri.getScheme(uri)).to.deep.equal(expected);
     };
 
     const expectParseToThrow = (uri: string, ...rest: Array<any>) => {
-        Chai.expect(() => Uri.getScheme(uri)).to.throw(...rest);
+        expect(() => Uri.getScheme(uri)).to.throw(...rest);
     };
 });
 
-Mocha.describe("Celery.Uri.parseUri", () => {
-    Mocha.it("should parse typical URIs", () => {
+describe("Celery.Uri.parseUri", () => {
+    it("should parse typical URIs", () => {
         expectParseToEqual(
             "https://google.com",
             {
@@ -135,7 +134,7 @@ Mocha.describe("Celery.Uri.parseUri", () => {
         );
     });
 
-    Mocha.it("should parse the host and scheme case-insensitively", () => {
+    it("should parse the host and scheme case-insensitively", () => {
         expectParseToEqual("S:", { path: "", raw: "S:", scheme: "s" });
         expectParseToEqual("SChEmE:", {
             path: "",
@@ -167,7 +166,7 @@ Mocha.describe("Celery.Uri.parseUri", () => {
         );
     });
 
-    Mocha.it("should not parse invalid schemes", () => {
+    it("should not parse invalid schemes", () => {
         expectParseToThrow("_://localhost", Errors.ParseError);
         expectParseToThrow("~://localhost", Errors.ParseError);
         expectParseToThrow("+://localhost", Errors.ParseError);
@@ -177,7 +176,7 @@ Mocha.describe("Celery.Uri.parseUri", () => {
         expectParseToThrow("+ab://localhost", Errors.ParseError);
     });
 
-    Mocha.it("should not parse invalid hostnames", () => {
+    it("should not parse invalid hostnames", () => {
         expectParseToThrow("s://.", Errors.ParseError);
         expectParseToThrow("s://h.", Errors.ParseError);
         expectParseToThrow("s://.h", Errors.ParseError);
@@ -187,7 +186,7 @@ Mocha.describe("Celery.Uri.parseUri", () => {
         expectParseToThrow("s://h-n.", Errors.ParseError);
     });
 
-    Mocha.it("should parse valid queries", () => {
+    it("should parse valid queries", () => {
         expectParseToEqual(
             "s://h?key=value",
             {
@@ -222,13 +221,13 @@ Mocha.describe("Celery.Uri.parseUri", () => {
         );
     });
 
-    Mocha.it("should not parse invalid queries", () => {
+    it("should not parse invalid queries", () => {
         expectParseToThrow("s://h?query =value", Errors.ParseError);
         expectParseToThrow("s://h?q=&", Errors.ParseError);
         expectParseToThrow("s://h?=value", Errors.ParseError);
     });
 
-    Mocha.it("should not parse invalid ports", () => {
+    it("should not parse invalid ports", () => {
         expectParseToThrow("s://h:0x100", Errors.ParseError);
         expectParseToThrow("s://h:0b100", Errors.ParseError);
         expectParseToThrow("s://h:0B100", Errors.ParseError);
@@ -246,10 +245,10 @@ Mocha.describe("Celery.Uri.parseUri", () => {
     });
 
     const expectParseToEqual = (uri: string, expected: Uri.Uri) => {
-        Chai.expect(Uri.parseUri(uri)).to.deep.equal(expected);
+        expect(Uri.parseUri(uri)).to.deep.equal(expected);
     };
 
     const expectParseToThrow = (uri: string, ...rest: Array<any>) => {
-        Chai.expect(() => Uri.parseUri(uri)).to.throw(...rest);
+        expect(() => Uri.parseUri(uri)).to.throw(...rest);
     };
 });

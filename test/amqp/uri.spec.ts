@@ -32,13 +32,14 @@
 import * as Options from "../../src/amqp/options";
 import * as Uri from "../../src/amqp/uri";
 
-import * as Chai from "chai";
-import * as Mocha from "mocha";
+// jna: these are implicitly set by Mocha and Chai in v9?
+
+import { expect } from "chai";
 
 /* tslint:disable:no-hardcoded-credentials no-big-function */
 
-Mocha.describe("Celery.Amqp.Uri.parse", () => {
-    Mocha.it("should parse basic URIs", () => {
+describe("Celery.Amqp.Uri.parse", () => {
+    it("should parse basic URIs", () => {
         assertParse(
             "amqp://localhost",
             {
@@ -80,7 +81,7 @@ Mocha.describe("Celery.Amqp.Uri.parse", () => {
         );
     });
 
-    Mocha.it("should parse sparse URIs", () => {
+    it("should parse sparse URIs", () => {
         assertParse(
             "amqp://:@h/",
             {
@@ -121,7 +122,7 @@ Mocha.describe("Celery.Amqp.Uri.parse", () => {
         );
     });
 
-    Mocha.it("should parse valid hostnames", () => {
+    it("should parse valid hostnames", () => {
         assertParse(
             "amqp://h.name",
             {
@@ -175,7 +176,7 @@ Mocha.describe("Celery.Amqp.Uri.parse", () => {
         );
     });
 
-    Mocha.it("should not parse invalid hostnames", () => {
+    it("should not parse invalid hostnames", () => {
         assertParseThrows("amqp://"); // uris do not have empty hostnames
 
         assertParseThrows("amqp://-");
@@ -211,7 +212,7 @@ Mocha.describe("Celery.Amqp.Uri.parse", () => {
         }
     });
 
-    Mocha.it("should parse queries in snake_case and camelCase", () => {
+    it("should parse queries in snake_case and camelCase", () => {
         assertParse(
             "amqp://h?channelMax=5555",
             {
@@ -297,7 +298,7 @@ Mocha.describe("Celery.Amqp.Uri.parse", () => {
         );
     });
 
-    Mocha.it("should not parse ill-formed queries", () => {
+    it("should not parse ill-formed queries", () => {
         assertParseThrows("amqp://?");
         assertParseThrows("amqp://?=");
         assertParseThrows("amqp://?&=");
@@ -311,15 +312,15 @@ Mocha.describe("Celery.Amqp.Uri.parse", () => {
         assertParseThrows("amqp://?key=value&=");
     });
 
-    Mocha.it("should not parse URIs with non-AMQP schemes", () => {
+    it("should not parse URIs with non-AMQP schemes", () => {
         assertParseThrows("redis://localhost");
         assertParseThrows("rediss://localhost");
     });
 
     const assertParse = (uri: string, expected: Options.AmqpOptions) =>
-        Chai.expect(Uri.parseAmqpUri(uri))
+        expect(Uri.parseAmqpUri(uri))
             .to.deep.equal(expected);
 
     const assertParseThrows = (uri: string) =>
-        Chai.expect(() => Uri.parseAmqpUri(uri)).to.throw(Error);
+        expect(() => Uri.parseAmqpUri(uri)).to.throw(Error);
 });

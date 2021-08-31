@@ -31,8 +31,7 @@
 
 import { List } from "../../src/containers";
 
-import * as Chai from "chai";
-import * as Mocha from "mocha";
+import { expect } from "chai";
 
 const expectIterableEqual = <T>(lhs: Iterable<T>, rhs: Iterable<T>) => {
     const first = lhs[Symbol.iterator]();
@@ -42,186 +41,186 @@ const expectIterableEqual = <T>(lhs: Iterable<T>, rhs: Iterable<T>) => {
         const firstNext = first.next();
         const secondNext = second.next();
 
-        Chai.expect(firstNext.done).to.deep.equal(secondNext.done);
+        expect(firstNext.done).to.deep.equal(secondNext.done);
 
         if (firstNext.done) {
             return;
         }
 
-        Chai.expect(firstNext.value).to.deep.equal(secondNext.value);
+        expect(firstNext.value).to.deep.equal(secondNext.value);
     }
 };
 
-Mocha.describe("Celery.Containers.List", () => {
-    Mocha.it("should be empty by default", () => {
+describe("Celery.Containers.List", () => {
+    it("should be empty by default", () => {
         const list = new List<number>();
 
-        Chai.expect(list.length).to.deep.equal(0);
+        expect(list.length).to.deep.equal(0);
         expectIterableEqual([], list);
     });
 
-    Mocha.it("should be initialized by #from", () => {
+    it("should be initialized by #from", () => {
         const init = [5, 4, 3, 2];
         const list = List.from(init);
 
-        Chai.expect(list.length).to.deep.equal(init.length);
+        expect(list.length).to.deep.equal(init.length);
         expectIterableEqual(init, list);
     });
 
-    Mocha.it("should be initialized by #of", () => {
+    it("should be initialized by #of", () => {
         const init = [5, 4, 3, 2];
         const list = List.of(...init);
 
-        Chai.expect(list.length).to.deep.equal(init.length);
+        expect(list.length).to.deep.equal(init.length);
         expectIterableEqual(init, list);
     });
 
-    Mocha.it("should #push to the right", () => {
+    it("should #push to the right", () => {
         const toPush = 3;
         const array: Array<number> = [];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.push(toPush)).to.deep.equal(array.push(toPush));
+        expect(list.push(toPush)).to.deep.equal(array.push(toPush));
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should #push multiple to the right", () => {
+    it("should #push multiple to the right", () => {
         const toPush = [3, 4, 5];
         const array: Array<number> = [];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.push(...toPush)).to.deep.equal(array.push(...toPush));
+        expect(list.push(...toPush)).to.deep.equal(array.push(...toPush));
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should #pop from the right", () => {
+    it("should #pop from the right", () => {
         const array: Array<number> = [0, 1, 2, 3];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.pop()).to.deep.equal(array.pop());
+        expect(list.pop()).to.deep.equal(array.pop());
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should #pop multiple from the right", () => {
+    it("should #pop multiple from the right", () => {
         const array = [0, 1, 2, 3];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.pop()).to.deep.equal(array.pop());
-        Chai.expect(list.pop()).to.deep.equal(array.pop());
-        Chai.expect(list.pop()).to.deep.equal(array.pop());
+        expect(list.pop()).to.deep.equal(array.pop());
+        expect(list.pop()).to.deep.equal(array.pop());
+        expect(list.pop()).to.deep.equal(array.pop());
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should #unshift to the left", () => {
+    it("should #unshift to the left", () => {
         const toUnshift = 3;
         const array: Array<number> = [];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.unshift(toUnshift))
+        expect(list.unshift(toUnshift))
             .to.deep.equal(array.unshift(toUnshift));
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should #unshift multiple to the left", () => {
+    it("should #unshift multiple to the left", () => {
         const toUnshift = [3, 4, 5];
         const array: Array<number> = [];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.unshift(...toUnshift))
+        expect(list.unshift(...toUnshift))
             .to.deep.equal(array.unshift(...toUnshift));
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should #shift from the left", () => {
+    it("should #shift from the left", () => {
         const array = [0, 1, 2, 3];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.shift()).to.deep.equal(array.shift());
+        expect(list.shift()).to.deep.equal(array.shift());
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should #shift multiple from the left", () => {
+    it("should #shift multiple from the left", () => {
         const array = [0, 1, 2, 3];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.shift()).to.deep.equal(array.shift());
-        Chai.expect(list.shift()).to.deep.equal(array.shift());
-        Chai.expect(list.shift()).to.deep.equal(array.shift());
+        expect(list.shift()).to.deep.equal(array.shift());
+        expect(list.shift()).to.deep.equal(array.shift());
+        expect(list.shift()).to.deep.equal(array.shift());
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should function as a FIFO queue", () => {
+    it("should function as a FIFO queue", () => {
         const array = [0, 1, 2, 3];
         const list: List<number> = List.from(array);
 
-        Chai.expect(list.shift()).to.deep.equal(array.shift());
-        Chai.expect(list.push(6)).to.deep.equal(array.push(6));
+        expect(list.shift()).to.deep.equal(array.shift());
+        expect(list.push(6)).to.deep.equal(array.push(6));
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
 
-        Chai.expect(list.shift()).to.deep.equal(array.shift());
-        Chai.expect(list.push(5)).to.deep.equal(array.push(5));
+        expect(list.shift()).to.deep.equal(array.shift());
+        expect(list.push(5)).to.deep.equal(array.push(5));
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
 
-        Chai.expect(list.shift()).to.deep.equal(array.shift());
-        Chai.expect(list.push(4)).to.deep.equal(array.push(4));
+        expect(list.shift()).to.deep.equal(array.shift());
+        expect(list.push(4)).to.deep.equal(array.push(4));
 
-        Chai.expect(list.length).to.deep.equal(array.length);
+        expect(list.length).to.deep.equal(array.length);
         expectIterableEqual(list, array);
     });
 
-    Mocha.it("should return undefined from an empty #pop call", () => {
+    it("should return undefined from an empty #pop call", () => {
         const list = new List<number>();
 
-        Chai.expect(list.pop()).to.deep.equal(undefined);
+        expect(list.pop()).to.deep.equal(undefined);
 
-        Chai.expect(list.length).to.deep.equal(0);
+        expect(list.length).to.deep.equal(0);
         expectIterableEqual(list, []);
     });
 
-    Mocha.it("should return undefined from an empty #shift call", () => {
+    it("should return undefined from an empty #shift call", () => {
         const list = new List<number>();
 
-        Chai.expect(list.shift()).to.deep.equal(undefined);
+        expect(list.shift()).to.deep.equal(undefined);
 
-        Chai.expect(list.length).to.deep.equal(0);
+        expect(list.length).to.deep.equal(0);
         expectIterableEqual(list, []);
     });
 
-    Mocha.it("should not fail to #pop a `List` with length 1", () => {
+    it("should not fail to #pop a `List` with length 1", () => {
         const list: List<number> = List.of(0);
 
-        Chai.expect(list.pop()).to.deep.equal(0);
+        expect(list.pop()).to.deep.equal(0);
 
-        Chai.expect(list.length).to.deep.equal(0);
+        expect(list.length).to.deep.equal(0);
         expectIterableEqual(list, []);
     });
 
-    Mocha.it("should not fail to #shift a `List` with length 1", () => {
+    it("should not fail to #shift a `List` with length 1", () => {
         const list: List<number> = List.of(0);
 
-        Chai.expect(list.shift()).to.deep.equal(0);
+        expect(list.shift()).to.deep.equal(0);
 
-        Chai.expect(list.length).to.deep.equal(0);
+        expect(list.length).to.deep.equal(0);
         expectIterableEqual(list, []);
     });
 });
