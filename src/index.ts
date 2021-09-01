@@ -35,6 +35,7 @@ export * from "./errors";
 export * from "./factories";
 export * from "./message_broker";
 export * from "./messages";
+export * from "./containers";
 export { Compressor, Encoder, Serializer } from "./packer";
 export {
     RedisBackend,
