@@ -19,7 +19,7 @@
 		"target": "es6",
 	    "rootDir": "./src"
 	},
-	"include": ["./src/**/*.ts"],
+        "include": ["./src/**/*.ts","./src/containers/*.ts"],
 	"typedocOptions": {
 		"excludeExternals": true,
 		"excludeNotExported": true,
