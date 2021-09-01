@@ -30,85 +30,83 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { PromiseMap } from "../../src/containers";
+import { assert, expect } from "chai";
 
-import * as Chai from "chai";
-import * as Mocha from "mocha";
-
-Mocha.describe("Celery.Containers.PromiseMap", () => {
-    Mocha.it("should register promises when getting them", () => {
+describe("Celery.Containers.PromiseMap", () => {
+    it("should register promises when getting them", () => {
         const map = new PromiseMap<string, { data: number }>();
 
         const value = { data: 15 };
         const num = map.get("foo");
-        Chai.expect(map.has("foo")).to.equal(true);
-        Chai.expect(map.isPending("foo")).to.equal(true);
-        Chai.expect(map.resolve("foo", value)).to.equal(false);
+        expect(map.has("foo")).to.equal(true);
+        expect(map.isPending("foo")).to.equal(true);
+        expect(map.resolve("foo", value)).to.equal(false);
 
         return num.then((v) => {
-            Chai.expect(map.isFulfilled("foo")).to.equal(true);
-            Chai.expect(v).to.equal(value);
+            expect(map.isFulfilled("foo")).to.equal(true);
+            expect(v).to.equal(value);
         });
     });
 
-    Mocha.it("should register promises when settling them", () => {
+    it("should register promises when settling them", () => {
         const map = new PromiseMap<string, { data: number }>();
 
         const value = { data: 10 };
-        Chai.expect(map.resolve("foo", value)).to.equal(true);
-        Chai.expect(map.has("foo")).to.equal(true);
-        Chai.expect(map.isPending("foo")).to.equal(true);
+        expect(map.resolve("foo", value)).to.equal(true);
+        expect(map.has("foo")).to.equal(true);
+        expect(map.isPending("foo")).to.equal(true);
         const num = map.get("foo");
 
         return num.then((v) => {
-            Chai.expect(map.isFulfilled("foo")).to.equal(true);
-            Chai.expect(v).to.equal(value);
+            expect(map.isFulfilled("foo")).to.equal(true);
+            expect(v).to.equal(value);
         });
     });
 
-    Mocha.it("should properly reject unregistered promises", () => {
+    it("should properly reject unregistered promises", () => {
         const map = new PromiseMap<string, void>();
 
         const error = new Error("error");
 
-        Chai.expect(map.reject("foo", error)).to.equal(true);
-        Chai.expect(map.has("foo")).to.equal(true);
-        Chai.expect(map.isRejected("foo")).to.equal(true);
+        expect(map.reject("foo", error)).to.equal(true);
+        expect(map.has("foo")).to.equal(true);
+        expect(map.isRejected("foo")).to.equal(true);
         const num = map.get("foo");
 
         return num.catch((reason) => {
-            Chai.expect(map.isRejected("foo")).to.equal(true);
-            Chai.expect(reason).to.equal(error);
+            expect(map.isRejected("foo")).to.equal(true);
+            expect(reason).to.equal(error);
         });
     });
 
-    Mocha.it("should reject registered promises", () => {
+    it("should reject registered promises", () => {
         const map = new PromiseMap<string, void>();
 
         const error = new Error("error");
 
         const num = map.get("foo");
-        Chai.expect(map.reject("foo", error)).to.equal(false);
-        Chai.expect(map.has("foo")).to.equal(true);
-        Chai.expect(map.isRejected("foo")).to.equal(true);
+        expect(map.reject("foo", error)).to.equal(false);
+        expect(map.has("foo")).to.equal(true);
+        expect(map.isRejected("foo")).to.equal(true);
 
         return num.catch((reason) => {
-            Chai.expect(map.isRejected("foo")).to.equal(true);
-            Chai.expect(reason).to.equal(error);
+            expect(map.isRejected("foo")).to.equal(true);
+            expect(reason).to.equal(error);
         });
     });
 
-    Mocha.it("should overwrite settled Promises with #resolve", async () => {
+    it("should overwrite settled Promises with #resolve", async () => {
         const map =  new PromiseMap<string, number>();
         map.resolve("foo", 5);
 
-        Chai.expect(await map.get("foo")).to.equal(5);
+        expect(await map.get("foo")).to.equal(5);
 
         map.resolve("foo", 10);
 
-        Chai.expect(await map.get("foo")).to.equal(10);
+        expect(await map.get("foo")).to.equal(10);
     });
 
-    Mocha.it("should overwrite settled Promises with #reject", async () => {
+    it("should overwrite settled Promises with #reject", async () => {
         const map =  new PromiseMap<string, number>();
         map.resolve("foo", 5);
 
@@ -117,25 +115,25 @@ Mocha.describe("Celery.Containers.PromiseMap", () => {
 
         try {
             await map.get("foo");
-            Chai.assert(false);
+            assert(false);
         } catch (e) {
-            Chai.expect(e).to.equal(error);
+            expect(e).to.equal(error);
         }
     });
 
-    Mocha.it("should delete promises as expected", () => {
+    it("should delete promises as expected", () => {
         const map =  new PromiseMap<string, number>();
         const value = map.get("foo");
 
-        Chai.expect(map.delete("foo")).to.equal(true);
-        Chai.expect(map.delete("foo")).to.equal(false);
+        expect(map.delete("foo")).to.equal(true);
+        expect(map.delete("foo")).to.equal(false);
 
-        Chai.expect(map.has("foo")).to.equal(false);
+        expect(map.has("foo")).to.equal(false);
 
-        return value.catch(() => Chai.expect(true).to.equal(true));
+        return value.catch(() => expect(true).to.equal(true));
     });
 
-    Mocha.it("should not reject settled promises in rejectAll", () => {
+    it("should not reject settled promises in rejectAll", () => {
         const map =  new PromiseMap<string, number>();
         map.resolve("foo", 15);
 
@@ -145,17 +143,17 @@ Mocha.describe("Celery.Containers.PromiseMap", () => {
         map.rejectAll(error);
 
         return value.catch((e) => {
-            Chai.expect(e).to.equal(error);
-            Chai.expect(map.has("bar")).to.equal(true);
+            expect(e).to.equal(error);
+            expect(map.has("bar")).to.equal(true);
 
             return map.get("foo");
         }).then((foo) => {
-            Chai.expect(foo).to.equal(15);
-            Chai.expect(map.has("foo")).to.equal(true);
+            expect(foo).to.equal(15);
+            expect(map.has("foo")).to.equal(true);
         });
     });
 
-    Mocha.it("should delete registered promises with clear", () => {
+    it("should delete registered promises with clear", () => {
         const map = new PromiseMap<string, number>();
         map.resolve("foo", 10);
         map.resolve("bar", 5);
@@ -164,30 +162,30 @@ Mocha.describe("Celery.Containers.PromiseMap", () => {
 
         map.resolve("baz", 25);
 
-        Chai.expect(map.delete("foo")).to.equal(false);
-        Chai.expect(map.delete("bar")).to.equal(false);
-        Chai.expect(map.delete("baz")).to.equal(true);
+        expect(map.delete("foo")).to.equal(false);
+        expect(map.delete("bar")).to.equal(false);
+        expect(map.delete("baz")).to.equal(true);
     });
 
-    Mocha.it("should reject pending promises with #clear", async () => {
+    it("should reject pending promises with #clear", async () => {
         const map = new PromiseMap<string, number>();
         map.resolve("foo", 0);
         const bar = map.get("bar");
 
         map.clear();
 
-        Chai.expect(map.has("foo")).to.equal(false);
-        Chai.expect(map.has("bar")).to.equal(false);
+        expect(map.has("foo")).to.equal(false);
+        expect(map.has("bar")).to.equal(false);
 
         try {
             await bar;
-            Chai.assert(false);
-        } catch (error) {
-            Chai.expect(error.message).to.equal("cleared");
+            assert(false);
+        } catch (error: any) {
+            expect(error.message).to.equal("cleared");
         }
     });
 
-    Mocha.it("should handle timeouts as expected", () => {
+    it("should handle timeouts as expected", () => {
         const map = new PromiseMap<string, number>(10);
 
         const request = map.get("foo");
@@ -199,50 +197,50 @@ Mocha.describe("Celery.Containers.PromiseMap", () => {
 
             return request;
         }).then((value) => {
-            Chai.expect(value).to.equal(5);
+            expect(value).to.equal(5);
 
             return new Promise((resolve) => {
                 setTimeout(resolve, 15);
             });
         }).then(() => {
-            Chai.expect(map.has("foo")).to.equal(false);
+            expect(map.has("foo")).to.equal(false);
         });
     });
 
-    Mocha.it("should reject rejecting promises", () => {
+    it("should reject rejecting promises", () => {
         const map = new PromiseMap<string, number>();
 
         const error = new Error("bar");
 
         map.resolve("foo", Promise.reject(error));
-        Chai.expect(map.has("foo")).to.equal(true);
-        Chai.expect(map.isPending("foo")).to.equal(true);
+        expect(map.has("foo")).to.equal(true);
+        expect(map.isPending("foo")).to.equal(true);
 
         return map.get("foo").catch((reason) => {
-            Chai.expect(map.isRejected("foo")).to.equal(true);
-            Chai.expect(reason).to.equal(error);
+            expect(map.isRejected("foo")).to.equal(true);
+            expect(reason).to.equal(error);
         });
     });
 
-    Mocha.it("should reject rejecting promises that have been created", () => {
+    it("should reject rejecting promises that have been created", () => {
         const map = new PromiseMap<string, number>();
 
         const value = map.get("foo");
 
-        Chai.expect(map.has("foo")).to.equal(true);
-        Chai.expect(map.isPending("foo")).to.equal(true);
+        expect(map.has("foo")).to.equal(true);
+        expect(map.isPending("foo")).to.equal(true);
 
         const error = new Error("bar");
         map.resolve("foo", Promise.reject(error));
 
-        Chai.expect(map.has("foo")).to.equal(true);
-        Chai.expect(map.isPending("foo")).to.equal(true);
+        expect(map.has("foo")).to.equal(true);
+        expect(map.isPending("foo")).to.equal(true);
 
         return value.then(() => {
-            Chai.expect(false);
+            expect(false);
         }).catch((reason) => {
-            Chai.expect(map.isRejected("foo")).to.equal(true);
-            Chai.expect(reason).to.equal(error);
+            expect(map.isRejected("foo")).to.equal(true);
+            expect(reason).to.equal(error);
         });
     });
 });
