@@ -1,4 +1,3 @@
-dist/
 node_modules/
 celery-ts-*.tgz
 /docs/
