@@ -3,7 +3,6 @@
 		"alwaysStrict": true,
 		"declaration": true,
 		"module": "CommonJS",
-		"moduleResolution": "node",
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitAny": true,
 		"noImplicitReturns": true,
@@ -19,7 +18,7 @@
 		"target": "es6",
 	    "rootDir": "./src"
 	},
-        "include": ["./src/**/*.ts","./src/containers/*.ts"],
+	"include": ["src"],
 	"typedocOptions": {
 		"excludeExternals": true,
 		"excludeNotExported": true,
