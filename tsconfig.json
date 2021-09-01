@@ -16,7 +16,8 @@
 		"sourceMap": true,
 		"strict": true,
 		"strictNullChecks": true,
-		"target": "ES2016"
+		"target": "es6",
+	    "rootDir": "./src"
 	},
 	"include": ["./src/**/*.ts"],
 	"typedocOptions": {
